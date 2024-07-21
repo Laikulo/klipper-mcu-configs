@@ -1,0 +1,16 @@
+[build-system]
+requires = ['setuptools', 'setuptools-scm']
+build-backend = "setuptools.build_meta"
+
+[project]
+name = 'kmcu_tools'
+authors = [
+    {name = "Laikulo", email = "aaron@haun.guru"},
+]
+dynamic = ["version"]
+
+[tool.setuptools.package-dir]
+"" = "src/python"
+
+[project.scripts]
+kmcu_metadata = "kmcu.commands:build_metadata"

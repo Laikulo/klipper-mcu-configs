@@ -1,0 +1,4 @@
+/dist/
+/src/python/*.egg-info
+/output/
+/.idea/

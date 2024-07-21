@@ -1,14 +1,49 @@
-import logging
+from multiprocessing import Array
 from pathlib import Path
+
+from .model import McuConfig
+
 
 class KMCU(object):
     TREE_ROOTS = ['community', 'vendor-official', 'vendor-scraped']
+
     def build_metadata(self):
-        meta_tree = {}
+        mcu_configs: Array[McuConfig] = []
 
-        for fileset in self.TREE_ROOTS;
-
-        pass
+        for fileset in self.TREE_ROOTS:
+            confidence_level = fileset
+            for vendor_dir in (self.basedir / fileset).iterdir():
+                if not vendor_dir.is_dir():
+                    continue
+                for product_dir in vendor_dir.iterdir():
+                    if not product_dir.is_dir():
+                        continue
+                    for product_entry in product_dir.iterdir():
+                        if product_entry.is_file():
+                            mcu_configs.append(McuConfig(
+                                provenance=confidence_level,
+                                vendor_name=vendor_dir.name,
+                                product_name=product_dir.name,
+                                variant_name=None,
+                                configuration_name=product_entry.name,
+                                kconfig_file=product_entry,
+                                description=None
+                            ))
+                        elif product_entry.is_dir():
+                            mcu_configs += [
+                                McuConfig(
+                                    provenance=confidence_level,
+                                    vendor_name=vendor_dir.name,
+                                    product_name=product_dir.name,
+                                    variant_name=product_entry.name,
+                                    configuration_name=variant_entry.name,
+                                    kconfig_file=variant_entry,
+                                    description=None
+                                )
+                                for variant_entry in product_entry.iterdir()
+                                if variant_entry.is_file()
+                            ]
+        return mcu_configs
 
     def __init__(self, basedir: Path):
         self.basedir: Path = basedir
