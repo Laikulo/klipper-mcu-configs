@@ -44,7 +44,7 @@ jobs:
           pushd pub/kconfigs
           cp "$IN/kconfigs.json" .
           tar -xvf "$IN/configs.tar"
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: pub/
   deploy:
