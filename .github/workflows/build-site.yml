@@ -14,7 +14,7 @@ jobs:
           cache: 'pip'
       - run: pip install build
       - run: make metadata
-      - uses: actions/upload-artifact@4
+      - uses: actions/upload-artifact@v4
         with:
           path: output/kconfigs.json
           name: kconfigs.json
@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: tar -cvf configs.tar community
-      - uses: actions/upload-artifact@4
+      - uses: actions/upload-artifact@v4
         with:
           path: configs.tar
           name: configs.tar
@@ -49,6 +49,8 @@ jobs:
           name: github-pages
           path: pub/
   deploy:
+    needs:
+      - assemble
     runs-on: ubuntu-latest
     environment:
       name: github-pages
