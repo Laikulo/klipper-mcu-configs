@@ -33,7 +33,7 @@ jobs:
       - bundle_configs
     runs-on: ubuntu-latest
     steps:
-      - uses: download-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
           merge-multiple: true
           path: input
@@ -44,7 +44,7 @@ jobs:
           pushd pub/kconfigs
           cp "$IN/kconfigs.json" .
           tar -xvf "$IN/configs.tar"
-      - uses: upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: github-pages
           path: pub/
