@@ -28,7 +28,7 @@ class KMCU(object):
                                 vendor_name=vendor_dir.name,
                                 product_name=product_dir.name,
                                 variant_name=None,
-                                configuration_name=str(product_entry.with_suffix('')),
+                                configuration_name=product_entry.stem,
                                 kconfig_file=product_entry,
                                 description=None
                             ))
@@ -39,7 +39,7 @@ class KMCU(object):
                                     vendor_name=vendor_dir.name,
                                     product_name=product_dir.name,
                                     variant_name=product_entry.name,
-                                    configuration_name=str(variant_entry.with_suffix('')),
+                                    configuration_name=variant_entry.stem,
                                     kconfig_file=variant_entry,
                                     description=None
                                 )
