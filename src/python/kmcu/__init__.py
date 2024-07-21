@@ -12,7 +12,10 @@ class KMCU(object):
 
         for fileset in self.TREE_ROOTS:
             confidence_level = fileset
-            for vendor_dir in (self.basedir / fileset).iterdir():
+            tree_dir = Path(self.basedir) / fileset
+            if not tree_dir.exists():
+                continue
+            for vendor_dir in tree_dir.iterdir():
                 if not vendor_dir.is_dir():
                     continue
                 for product_dir in vendor_dir.iterdir():
