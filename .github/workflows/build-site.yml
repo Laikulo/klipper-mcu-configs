@@ -36,7 +36,7 @@ jobs:
         working-directory: src/vue
       - run: npm build -- -- --base /klipper-mcu-configs
         working-directory: src/vue
-      - run: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v4
         with:
           path: src/vue/dist
           name: vue-output
