@@ -17,7 +17,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           path: output/kconfigs.json
-          name: kconfigs.json
+          name: kconfig-manifest
   bundle_configs:
     runs-on: ubuntu-latest
     steps:
@@ -26,7 +26,20 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           path: configs.tar
-          name: configs.tar
+          name: config-bundle
+  build_vue:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - run: npm ci
+        working-directory: src/vue
+      - run: npm build -- -- --base /klipper-mcu-configs
+        working-directory: src/vue
+      - run: actions/upload-pages-artifact@v4
+        with:
+          path: src/vue/dist
+          name: vue-output
   bundle_site:
     runs-on: ubuntu-latest
     steps:
@@ -36,24 +49,26 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           path: site.tar
-          name: site.tar
+          name: site-bundle
   assemble:
     needs:
       - build_meta
       - bundle_configs
       - bundle_site
+      - build_vue
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
         with:
-          merge-multiple: true
+          merge-multiple: false
           path: input
       - run: |
           mkdir pub
           mkdir pub/kconfigs
-          tar -xvf "input/site.tar" -C pub
-          cp "input/kconfigs.json" pub/kconfigs
-          tar -xvf "input/configs.tar" -C pub/kconfigs
+          tar -xvf "input/site-bundle/site.tar" -C pub/
+          tar -xvf "input/vue-output/artifact.tar" -C pub/kconfigs
+          cp "input/kconfig-manifest/kconfigs.json" pub/kconfigs
+          tar -xvf "input/config-bundle/configs.tar" -C pub/kconfigs
       - uses: actions/upload-pages-artifact@v3
         with:
           path: pub/
