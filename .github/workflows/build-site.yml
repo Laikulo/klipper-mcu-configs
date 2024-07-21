@@ -53,7 +53,7 @@ jobs:
           mkdir pub/kconfigs
           tar -xvf "input/site.tar" -C pub
           cp "input/kconfigs.json" pub/kconfigs
-          tar -xvf "$IN/configs.tar" -C pub/kconfigs
+          tar -xvf "input/configs.tar" -C pub/kconfigs
       - uses: actions/upload-pages-artifact@v3
         with:
           path: pub/
