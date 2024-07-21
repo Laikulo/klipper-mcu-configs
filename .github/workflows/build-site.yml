@@ -3,7 +3,7 @@ on:
   - workflow_dispatch
 
 jobs:
-  build_whl:
+  build_meta:
     runs-on:
       - ubuntu-latest
     steps:
@@ -14,5 +14,52 @@ jobs:
           cache: 'pip'
       - run: pip install build
       - run: make metadata
+      - uses: actions/upload-artifact@4
+        with:
+          path: output/kconfigs.json
+          name: kconfigs.json
+  bundle_configs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: tar -cvf configs.tar community
+      - uses: actions/upload-artifact@4
+        with:
+          path: configs.tar
+          name: configs.tar
+  assemble:
+    needs:
+      - build_meta
+      - bundle_configs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: download-artifact@v4
+        with:
+          merge-multiple: true
+          path: input
+      - run: |
+          mkdir pub
+          mkdir pub/kconfigs
+          IN="$(realpath "$PWD/input")"
+          pushd pub/kconfigs
+          cp "$IN/kconfigs.json" .
+          tar -xvf "$IN/configs.tar"
+      - uses: upload-artifact@v4
+        with:
+          name: github-pages
+          path: pub/
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - uses: actions/deploy-pages@v4
+
+
+
 
 
