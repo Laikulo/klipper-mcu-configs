@@ -2,10 +2,12 @@
 
 metadata: output/kconfigs.json
 
-output/kconfigs.json: venv/bin/kmcu_metadata
-	./venv/bin/kmcu_metadata
+output/kconfigs.json: wheel-installed.flag
+	kmcu_metadata
 
-venv/bin/kmcu_metadata: dist/kmcu_tools-0.0.0-py3-none-any.whl
+wheel-installed.flag: dist/kmcu_tools-0.0.0-py3-none-any.whl
 	pip install --no-deps --force-reinstall dist/kmcu_tools-0.0.0-py3-none-any.whl
+	touch wheel-installed.flag
+
 dist/kmcu_tools-0.0.0-py3-none-any.whl:
 	pyproject-build
