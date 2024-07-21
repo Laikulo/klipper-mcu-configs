@@ -6,7 +6,7 @@ const props = defineProps(['mcu_config'])
     <div class="title">
       <div class="config-manufacturer">{{ mcu_config['vendor'] }}</div>
       <div class="config-product">{{ mcu_config['product'] }}</div>
-      <div class="config-variant" v-if="mcu_config.hasOwnProperty('variant')">{{ mcu_config['variant'] }}</div>
+      <div class="config-variant" v-if="mcu_config['variant']">{{ mcu_config['variant'] }}</div>
       <div class="config-name" v-if="mcu_config['configuration'] != 'build'">{{ mcu_config['configuration'] }}</div>
     </div>
     <div class="actions">
