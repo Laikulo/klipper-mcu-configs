@@ -34,7 +34,7 @@ jobs:
       - uses: actions/setup-node@v4
       - run: npm ci
         working-directory: src/vue
-      - run: npm run build -- -- --base /klipper-mcu-configs
+      - run: npm run build -- -- --base /klipper-mcu-configs/kconfigs
         working-directory: src/vue
       - uses: actions/upload-pages-artifact@v3
         with:
