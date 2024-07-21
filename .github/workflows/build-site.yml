@@ -50,7 +50,7 @@ jobs:
           path: input
       - run: |
           mkdir pub
-          mkdir -f pub/kconfigs
+          mkdir pub/kconfigs
           tar -xvf "input/site.tar" -C pub
           cp "input/kconfigs.json" pub/kconfigs
           tar -xvf "$IN/configs.tar" -C pub/kconfigs
