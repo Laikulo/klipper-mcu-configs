@@ -27,10 +27,21 @@ jobs:
         with:
           path: configs.tar
           name: configs.tar
+  bundle_site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: tar -cvf ../site.tar .
+        working-directory: site
+      - uses: actions/upload-artifact@v4
+        with:
+          path: site.tar
+          name: site.tar
   assemble:
     needs:
       - build_meta
       - bundle_configs
+      - bundle_site
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
@@ -39,11 +50,10 @@ jobs:
           path: input
       - run: |
           mkdir pub
-          mkdir pub/kconfigs
-          IN="$(realpath "$PWD/input")"
-          pushd pub/kconfigs
-          cp "$IN/kconfigs.json" .
-          tar -xvf "$IN/configs.tar"
+          mkdir -f pub/kconfigs
+          tar -xvf "input/site.tar" -C pub
+          cp "input/kconfigs.json" pub/kconfigs
+          tar -xvf "$IN/configs.tar" -C pub/kconfigs
       - uses: actions/upload-pages-artifact@v3
         with:
           path: pub/
